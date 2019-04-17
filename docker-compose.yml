@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: wordpress
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+
+  wordpress:
+    build: .
+    ports:
+      - 80:80
+    volumes:
+      - ./bedrock/web/app/themes:/var/www/html/web/app/themes
+      - ./bedrock/web/app/plugins:/var/www/html/web/app/plugins
+    environment:
+      DB_NAME: wordpress
+      DB_USER: root
+      DB_PASSWORD: 12345
+      DB_HOST: db
+      DB_PREFIX: wp_
+      MAINTENANCE: "false"
+      WP_ENV: development
+      WP_HOME: http://omdcom.localhost
+      WP_SITEURL: http://omdcom.localhost/wp
+      ACF_PRO_KEY: b3JkZXJfaWQ9ODkwNjF8dHlwZT1kZXZlbG9wZXJ8ZGF0ZT0yMDE2LTA5LTA2IDAyOjUzOjA4
